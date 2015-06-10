@@ -462,28 +462,53 @@ class Client
     public function salesReport( $start_date, $end_date, $airline_code = null )
     {
         $start_date = explode('-',$start_date);
-		$end_date 	= explode('-',$end_date);
-		
+	$end_date   = explode('-',$end_date);
+	
         $params = array();
         $params['dateDetails']['businessSemantic']				 	= 'S';
-		$params['salesPeriodDetails']['beginDateTime']['year'] 	    = $start_date[0];
-		$params['salesPeriodDetails']['beginDateTime']['month'] 	= $start_date[1];
-		$params['salesPeriodDetails']['beginDateTime']['day'] 		= $start_date[2];
-		$params['salesPeriodDetails']['endDateTime']['year'] 		= $end_date[0];
-		$params['salesPeriodDetails']['endDateTime']['month'] 		= $end_date[1];
-		$params['salesPeriodDetails']['endDateTime']['day'] 		= $end_date[2];		
-			
-		if($airline_code <> null){
-			$params['validatingCarrierDetails']['companyIdentification']['marketingCompany'] = $airline_code;
-		}	
-		$params['requestOption']['selectionDetails']['option'] 	= 'SOF';
+        $params['salesPeriodDetails']['beginDateTime']['year'] 	    = $start_date[0];
+        $params['salesPeriodDetails']['beginDateTime']['month'] 	= $start_date[1];
+        $params['salesPeriodDetails']['beginDateTime']['day'] 		= $start_date[2];
+        $params['salesPeriodDetails']['endDateTime']['year'] 		= $end_date[0];
+        $params['salesPeriodDetails']['endDateTime']['month'] 		= $end_date[1];
+        $params['salesPeriodDetails']['endDateTime']['day'] 		= $end_date[2];
+        
+        if($airline_code <> null){
+        	$params['validatingCarrierDetails']['companyIdentification']['marketingCompany'] = $airline_code;
+        }
+        $params['requestOption']['selectionDetails']['option'] 	= 'SOF';
         
         $this->_data = $this->_client->__soapCall('SalesReports_DisplayQueryReport', $params, null,
             new \SoapHeader(Client::AMD_HEAD_NAMESPACE, 'SessionId', $this->_headers['SessionId']), $this->_headers);
             
         $this->debugDump($params, $this->_data);
     }
+    
+    /**
+     * Fare_ConvertCurrency
+     * Retrieve a currency convert by date to get exchange rates
+     *
+     * @param string $date the date of currency convert (ex: 2015-12-20)
+     * @param string $from currency ISO 4217 ID (ex: USD, GBP, EUR), see http://en.wikipedia.org/w/index.php?title=ISO_4217#Active_codes
+     * @param string $to currency ISO 4217 ID (ex: USD, GBP, EUR), see http://en.wikipedia.org/w/index.php?title=ISO_4217#Active_codes
+     */
+    public function currencyConvert( $date, $from, $to )
+    {
+        $params = array();
+        $params['message']['messageFunctionDetails']['messageFunction']  			= '726';
+	$params['conversionDate']['dateAndTimeDetails']['qualifier']				= 'B';
+	$params['conversionDate']['dateAndTimeDetails']['date']					= $date;
+	$params[1]['conversionDetails']['conversionDirection']['selectionDetails']['option'] 	= '706';
+	$params[1]['conversionDetails']['currencyInfo']['conversionRateDetails']['currency']	= $from;
+	$params[2]['conversionDetails']['conversionDirection']['selectionDetails']['option'] 	= '707';
+	$params[2]['conversionDetails']['currencyInfo']['conversionRateDetails']['currency'] 	= $to;
 
+        $this->_data = $this->_client->__soapCall('Fare_ConvertCurrency', $params, null,
+            new \SoapHeader(Client::AMD_HEAD_NAMESPACE, 'SessionId', $this->_headers['SessionId']), $this->_headers);
+            
+        $this->debugDump($params, $this->_data);
+    }
+    
     /**
      * Recusively dump the variable
      *
