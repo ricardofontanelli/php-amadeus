@@ -1,0 +1,3 @@
+<?php
+// Signout
+$ws->securitySignout();
