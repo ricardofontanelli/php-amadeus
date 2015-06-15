@@ -2,10 +2,10 @@
 /**
  * Amadeus Sample client
  */
-include '../src/Amadeus/Client.php';
+include_once( '../src/Amadeus/Client.php' );
 
-include 'ini.php';
+include_once( 'ini.php' );
 
-$ws->currencyConvert('2015-06-14', 'USD', 'BRL');
+$ws->currencyConvert( '2015-06-14', 'USD', 'BRL' );
 
-include 'end.php';
+include_once( 'end.php' );
