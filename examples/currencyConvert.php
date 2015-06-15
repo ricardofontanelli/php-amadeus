@@ -6,6 +6,6 @@ include '../src/Amadeus/Client.php';
 
 include 'ini.php';
 
-$ws->currencyConvert('USD', 'BRL');
+$ws->currencyConvert('2015-06-14', 'USD', 'BRL');
 
 include 'end.php';
